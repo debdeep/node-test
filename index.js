@@ -1,30 +1,14 @@
 const express = require('express');
+const connectToDB = require('./src/config/database');
 const app = express();
-const port = 3000;
+const port = 7777;
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
-
-app.get('/about', (req, res) => {
-  res.send('About Page');
-});
-
-app.use('/user', (req, res, next) => {
-  console.log('User Page Handler 1');
-  next();
-  //res.send('User Page Response Handler 1');
-
-},
-  (req, res) => {
-    console.log('User Page Handler 2');
-    res.send('User Page Response Handler 2');
-  }, (req, res) => {
-    console.log('User Page Handler 3');
-    res.send('User Page Response Handler 3');
-  }
-);
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+connectToDB().then(() => {
+  console.log('Connected to the database successfully!');
+  // Start the server after successful database connection
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}).catch((error) => {
+  console.error('Error during database connection:', error);
 });
